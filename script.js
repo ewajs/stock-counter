@@ -11,7 +11,7 @@ function updateSections() {
     currentSectionSpan.innerText = currentSection;
     if (sections[currentSection]){ 
         barcodeInput.value = sections[currentSection].join('\n') + '\n';
-        totalItemsSection.innerText = sections[currentSection].length - 1;
+        totalItemsSection.innerText = sections[currentSection].length;
     } else {
         barcodeInput.value = "";
         totalItemsSection.innerText = 0;
