@@ -211,7 +211,46 @@ function exportCSV() {
     sections.forEach((section, section_idx) => 
         section.forEach(item => 
             csvString += `"${item.amount}","${item.barcode}","${section_idx}"\r\n`));
-    window.open(encodeURI(csvString));
+    window.open(encodeURI(csvString.trim()));
+    Swal.close();
+    barcodeInput.focus();
+}
+
+function importCSV() {
+    const fileInput = document.createElement('input');
+    fileInput.type = "file";
+    fileInput.accept = ".csv, text/csv";
+    
+    fileInput.addEventListener('change', (e) => {
+        if (fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                // Parse the results into a JSON
+                const parsedCSV = Papa.parse(reader.result, { header: true });
+                deleteAll();
+
+                const validData =  parsedCSV.data.filter(item => 
+                    item.hasOwnProperty('Cantidad') && item.hasOwnProperty('Codigo') && item.hasOwnProperty('Seccion'));
+                const detectedSections = new Set();
+                validData.forEach((item) => detectedSections.add(parseInt(item['Seccion'])));
+                const sortedSections = [...detectedSections].sort()
+                console.log(sortedSections);
+            }
+            reader.readAsText(fileInput.files[0]);
+        }
+    });
+    
+    fileInput.click();
+}
+
+function deleteAll() {
+    sections = [[]];
+    currentSection = 0;
+    storeChanges();
+    updateSections();
+    updateTotalItems();
+    Swal.close();
+    barcodeInput.focus();
 }
 
 mainMenu.addEventListener('click', () => {
@@ -229,15 +268,18 @@ mainMenu.addEventListener('click', () => {
             </div>
             <div class="row mt-2">
                 <div class="col">
-                    <button class="btn btn-light delete">Cancelar</button>
+                    <button class="btn btn-light cancel">Cancelar</button>
                 </div>
             </div>
         </div>
         `,
         showConfirmButton: false,
         didOpen() {
-            const exportBtn = document.querySelector('.main-menu .export');
-            exportBtn.addEventListener('click', exportCSV);
+            document.querySelector('.main-menu .export').addEventListener('click', exportCSV);
+            document.querySelector('.main-menu .import').addEventListener('click', importCSV);
+            document.querySelector('.main-menu .delete').addEventListener('click', deleteAll);
+            document.querySelector('.main-menu .cancel').addEventListener('click', () => Swal.close());
+
         }
       });
 })
