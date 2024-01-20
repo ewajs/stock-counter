@@ -8,6 +8,7 @@ const totalItems = document.getElementById('totalItems');
 const sectionPlus = document.getElementById('sectionPlus');
 const sectionMinus = document.getElementById('sectionMinus');
 const sectionDelete = document.getElementById('sectionDelete');
+const mainMenu = document.getElementById('mainMenu');
 let sections = [[]];
 let currentSection = 0;
 
@@ -204,3 +205,39 @@ tableBody.addEventListener('click', (e) => {
             }
       });
 });
+
+function exportCSV() {
+    let csvString = 'data:text/csv;charset=utf-8,Cantidad,Codigo,Seccion\r\n';
+    sections.forEach((section, section_idx) => 
+        section.forEach(item => 
+            csvString += `"${item.amount}","${item.barcode}","${section_idx}"\r\n`));
+    window.open(encodeURI(csvString));
+}
+
+mainMenu.addEventListener('click', () => {
+    Swal.fire({
+        title: `Menú Principal`,
+        customClass: 'main-menu',
+        html: `
+        <div class="container">
+            <div class="row mt-2">
+                <div class="col">
+                    <button class="btn btn-primary export">Exportar</button>
+                    <button class="btn btn-success import">Importar</button>
+                    <button class="btn btn-danger delete">Borrar</button>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col">
+                    <button class="btn btn-light delete">Cancelar</button>
+                </div>
+            </div>
+        </div>
+        `,
+        showConfirmButton: false,
+        didOpen() {
+            const exportBtn = document.querySelector('.main-menu .export');
+            exportBtn.addEventListener('click', exportCSV);
+        }
+      });
+})

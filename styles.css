@@ -31,3 +31,7 @@
 .swal-edit .input-group input:first-of-type {
     width: 70%;
 }
+
+.swal2-modal.main-menu .swal2-html-container {
+    margin: 0;
+}
