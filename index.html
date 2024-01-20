@@ -9,7 +9,7 @@
       integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./styles.css" />
     <title>Stock Counter</title>
   </head>
   <body>
@@ -20,27 +20,60 @@
         </div>
       </div>
       <div class="row">
-        <div class="col d-flex mb-2 align-items-center controls">
-          <p>Sección &nbsp;<span id="currentSectionSpan">1</span></p>
-          <button type="button" id="sectionPlus" class="btn btn-primary btn-section">
+        <div class="col d-flex mb-2 align-items-center justify-content-center controls">
+          <p>Sección &nbsp;<span id="currentSectionSpan">1</span>/<span id="totalSectionsSpan">1</span></p>
+          <button
+            type="button"
+            id="sectionPlus"
+            class="btn btn-primary btn-section"
+          >
             +
           </button>
-          <button type="button" id="sectionMinus" class="btn btn-primary btn-section disabled">
+          <button
+            type="button"
+            id="sectionMinus"
+            class="btn btn-primary btn-section disabled"
+          >
             -
           </button>
-          <p>Total Sección: <span id="totalItemsSection">0</span></p>
+          <button
+            type="button"
+            id="sectionDelete"
+            class="btn btn-primary btn-section disabled"
+          >
+          <i class="bi bi-trash"></i>
+          </button>
         </div>
       </div>
       <div class="row">
-        <div class="col-8">
-          <textarea
-            id="barcodeInput"
-            class="form-control"
-            cols="15"
-            rows="20"
-          ></textarea>
+        <div class="col">
+            <div class="input-group mb-3">
+                <input type="text" id="barcodeInput" class="form-control" placeholder="Código de Barras" aria-label="Código de Barras" aria-describedby="button-addon2">
+                <button class="btn btn-primary" id="barcodeEnter" type="button" id="button-addon2"><i class="bi bi-arrow-return-left"></i></button>
+            </div>
         </div>
-        <div class="col-4"></div>
+      </div>
+      <div class="row">
+        <div class="col d-flex justify-content-between">
+            <p><strong>Total Sección:</strong> <span id="totalItemsSection">0</span></p>
+            <p><strong>Total:</strong> <span id="totalItems">0</span></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Editar</th>
+                        <th scope="col">Cantidad</th>
+                        <th scope="col">Código de Barras</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tableBody">
+
+                  </tbody>
+            </table>
+        </div>
       </div>
     </div>
 
@@ -49,6 +82,7 @@
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
       crossorigin="anonymous"
     ></script>
-    <script src="./script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./reader.js"></script>
   </body>
 </html>
