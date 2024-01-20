@@ -236,11 +236,11 @@ function importCSV() {
                 const validData =  parsedCSV.data.filter(item => 
                     item.hasOwnProperty('Cantidad') && item.hasOwnProperty('Codigo') && item.hasOwnProperty('Seccion'));
                 const detectedSections = new Set();
-                validData.forEach((item) => detectedSections.add(parseInt(item['Seccion'])));
+                validData.forEach((item) => detectedSections.add(parseInt(item['Seccion']) - 1));
                 const sortedSections = [...detectedSections].sort()
                 sortedSections.forEach(sectionIdx => sections[sectionIdx] = []);
                 validData.forEach((item) => {
-                    const itemSection = parseInt(item['Seccion']);
+                    const itemSection = parseInt(item['Seccion']) - 1;
                     const currIndex = sections[itemSection].length;
                     sections[itemSection].push({barcode: item['Codigo'], amount: parseInt(item['Cantidad']), index: currIndex});
                 });
