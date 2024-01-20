@@ -14,12 +14,16 @@ let currentSection = 0;
 
 sections[currentSection] = [];
 
+function getItemsInSection(section) {
+    return section.reduce((acc, line) => acc + line.amount, 0);
+}
+
 function updateItemsInSection() {
-    totalItemsSection.innerText = sections[currentSection].length;
+    totalItemsSection.innerText = getItemsInSection(sections[currentSection]);
 }
 
 function updateTotalItems() {
-    totalItems.innerText = sections.reduce((acc, section) => acc + section.length, 0);
+    totalItems.innerText = sections.reduce((acc, section) => acc + getItemsInSection(section), 0);
 }
 
 function updateSections() {
@@ -134,7 +138,7 @@ tableBody.addEventListener('click', (e) => {
     // Only listen for clicks on the edit button
     if (!e.target.classList.contains('bi-pencil')) return;
     const targetBarcodeRow = e.target.closest('tr');
-    const index = targetBarcodeRow.dataset.index;
+    const index = parseInt(targetBarcodeRow.dataset.index);
     Swal.fire({
         title: `Editar ${targetBarcodeRow.dataset.barcode}`,
         html: `
@@ -166,9 +170,11 @@ tableBody.addEventListener('click', (e) => {
                 targetBarcodeRow.dataset.barcode = barcode;
                 targetBarcodeRow.dataset.amount = amount;
                 const indexToEdit = sections[currentSection].findIndex(el => el.index === index);
-                sections[currentSection][indexToEdit] = {index, barcode, amount};
+                sections[currentSection][indexToEdit] = {index, barcode, amount: parseInt(amount)};
                 targetBarcodeRow.querySelector('.barcode').innerText = barcode;
                 targetBarcodeRow.querySelector('.amount').innerText = amount;
+                updateItemsInSection();
+                updateTotalItems();
             }
       });
 });
