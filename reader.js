@@ -148,6 +148,7 @@ function deleteItem(index) {
     const indexToRemove = sections[currentSection].findIndex(el => el.index === index);
     sections[currentSection].splice(indexToRemove, 1);
     reindexSection();
+    barcodeInput.focus();
 }
 
 function reindexSection() {
@@ -188,8 +189,10 @@ tableBody.addEventListener('click', (e) => {
           ];
         }
       }).then((result) => {
-            if (result.isDismissed) return;
-            else if (result.isDenied) deleteItem(index);
+            if (result.isDismissed) { 
+                barcodeInput.focus();
+                return;
+            } else if (result.isDenied) deleteItem(index);
             else if (result.isConfirmed) {
                 const [barcode, amount] = result.value;
                 console.log("Updating", barcode, amount)
@@ -202,6 +205,7 @@ tableBody.addEventListener('click', (e) => {
                 updateItemsInSection();
                 updateTotalItems();
                 storeChanges();
+                barcodeInput.focus();
             }
       });
 });
@@ -245,6 +249,7 @@ function importCSV() {
                 updateSections();
                 updateTotalItems();
                 checkSectionControls();
+                barcodeInput.focus();
             }
             reader.readAsText(fileInput.files[0]);
         }
