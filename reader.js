@@ -210,7 +210,7 @@ function exportCSV() {
     let csvString = 'data:text/csv;charset=utf-8,Cantidad,Codigo,Seccion\r\n';
     sections.forEach((section, section_idx) => 
         section.forEach(item => 
-            csvString += `"${item.amount}","${item.barcode}","${section_idx}"\r\n`));
+            csvString += `"${item.amount}","${item.barcode}","${section_idx + 1}"\r\n`));
     window.open(encodeURI(csvString.trim()));
     Swal.close();
     barcodeInput.focus();
