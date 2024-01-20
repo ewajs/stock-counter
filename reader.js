@@ -8,11 +8,23 @@ const totalItems = document.getElementById('totalItems');
 const sectionPlus = document.getElementById('sectionPlus');
 const sectionMinus = document.getElementById('sectionMinus');
 const sectionDelete = document.getElementById('sectionDelete');
-let sections = [];
-
+let sections = [[]];
 let currentSection = 0;
 
-sections[currentSection] = [];
+document.addEventListener('DOMContentLoaded', () => {
+    barcodeInput.focus()
+    const sectionsData = localStorage.getItem('sections');
+    if (sectionsData === null) return;
+    sections = JSON.parse(sectionsData);
+    currentSection = sections.length - 1;
+    updateSections();
+    updateTotalItems();
+    checkSectionControls();
+});
+
+function storeChanges() {
+    localStorage.setItem('sections', JSON.stringify(sections));
+}
 
 function getItemsInSection(section) {
     return section.reduce((acc, line) => acc + line.amount, 0);
@@ -41,11 +53,24 @@ function updateSections() {
 }
 
 function deleteSection() {
-    sections.splice(currentSection, 1);
-    if(currentSection > 0) currentSection--;
-    updateSections();
-    updateTotalItems();
-    checkSectionControls();
+    Swal.fire({
+        title: `Borrar Seccion?`,
+        text: `Esta sección contiene ${getItemsInSection(sections[currentSection])} items, borrar?`,
+        focusConfirm: false,
+        showCancelButton: true,
+        confirmButtonText: 'Borrar',
+        cancelButtonText: 'Cancelar',
+    }).then(result => {
+        if (result.isConfirmed) {
+            sections.splice(currentSection, 1);
+            if(currentSection > 0) currentSection--;
+            updateSections();
+            updateTotalItems();
+            checkSectionControls();
+            storeChanges();
+        }
+    })
+    
 }
 
 function checkSectionControls() {
@@ -74,9 +99,6 @@ sectionPlus.addEventListener('click', sectionForward);
 sectionMinus.addEventListener('click', sectionBack);
 sectionDelete.addEventListener('click', deleteSection)
 
-
-document.addEventListener('DOMContentLoaded', () => barcodeInput.focus());
-
 function addBarcode(barcode) {
     barcodeInput.focus();
     barcode = barcode.trim();
@@ -89,6 +111,7 @@ function addBarcode(barcode) {
     barcodeInput.value = '';
     updateItemsInSection();
     updateTotalItems();
+    storeChanges();
 }
 
 function addBarcodeToTable(barcodeData) {
@@ -132,6 +155,7 @@ function reindexSection() {
     });
     updateSections();
     updateTotalItems();
+    storeChanges();
 }
 
 tableBody.addEventListener('click', (e) => {
@@ -153,6 +177,7 @@ tableBody.addEventListener('click', (e) => {
         focusConfirm: false,
         showDenyButton: true,
         showCancelButton: true,
+        confirmButtonText: 'Guardar',
         denyButtonText: 'Borrar',
         cancelButtonText: 'Cancelar',
         preConfirm: () => {
@@ -175,6 +200,7 @@ tableBody.addEventListener('click', (e) => {
                 targetBarcodeRow.querySelector('.amount').innerText = amount;
                 updateItemsInSection();
                 updateTotalItems();
+                storeChanges();
             }
       });
 });
