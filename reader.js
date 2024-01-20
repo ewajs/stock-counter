@@ -101,7 +101,7 @@ function addBarcodeToTable(barcodeData) {
     td1.innerHTML = '<i class="bi bi-pencil"></i>';
     const td2 = document.createElement('td');
     td2.classList.add('amount');
-    td2.innerText = 1;
+    td2.innerText = barcodeData.amount;
     const td3 = document.createElement('td');
     td3.classList.add('barcode');
     td3.innerText = barcodeData.barcode;
