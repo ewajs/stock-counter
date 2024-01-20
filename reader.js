@@ -234,7 +234,17 @@ function importCSV() {
                 const detectedSections = new Set();
                 validData.forEach((item) => detectedSections.add(parseInt(item['Seccion'])));
                 const sortedSections = [...detectedSections].sort()
-                console.log(sortedSections);
+                sortedSections.forEach(sectionIdx => sections[sectionIdx] = []);
+                validData.forEach((item) => {
+                    const itemSection = parseInt(item['Seccion']);
+                    const currIndex = sections[itemSection].length;
+                    sections[itemSection].push({barcode: item['Codigo'], amount: parseInt(item['Cantidad']), index: currIndex});
+                });
+                // Finally Reset UI
+                currentSection = sections.length - 1;
+                updateSections();
+                updateTotalItems();
+                checkSectionControls();
             }
             reader.readAsText(fileInput.files[0]);
         }
