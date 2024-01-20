@@ -19,3 +19,15 @@
 .table tr *:last-child {
     width: 70%;
 }
+
+.swal2-title {
+    font-size: 20px;
+}
+
+.swal-edit {
+    padding: 5px;
+}
+
+.swal-edit .input-group input:first-of-type {
+    width: 70%;
+}
