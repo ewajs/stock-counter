@@ -223,7 +223,7 @@ function exportCSV() {
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvString));
     const timestamp = new Date().toISOString().replaceAll(":", "_").split(".")[0];
-    element.setAttribute('download', "benasu_stock_" + timestamp);
+    element.setAttribute('download', "benasu_stock_" + timestamp + ".csv");
     element.click();
     Swal.close();
     setTimeout(() => barcodeInput.focus(), 500)
