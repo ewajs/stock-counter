@@ -216,11 +216,15 @@ tableBody.addEventListener('click', (e) => {
 });
 
 function exportCSV() {
-    let csvString = 'data:text/csv;charset=utf-8,Cantidad,Codigo,Seccion\r\n';
+    let csvString = 'Cantidad,Codigo,Seccion\r\n';
     sections.forEach((section, section_idx) => 
         section.forEach(item => 
             csvString += `"${item.amount}","${item.barcode}","${section_idx + 1}"\r\n`));
-    window.open(encodeURI(csvString.trim()));
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvString));
+    const timestamp = new Date().toISOString().replaceAll(":", "_").split(".")[0];
+    element.setAttribute('download', "benasu_stock_" + timestamp);
+    element.click();
     Swal.close();
     setTimeout(() => barcodeInput.focus(), 500)
 }
