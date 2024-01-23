@@ -21,6 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
     updateSections();
     updateTotalItems();
     checkSectionControls();
+
+    // Prevent navigating away by accident
+    window.onbeforeunload = function () {
+        return "Estás seguro de querer salir?";
+    };
 });
 
 function storeChanges() {
@@ -217,7 +222,7 @@ function exportCSV() {
             csvString += `"${item.amount}","${item.barcode}","${section_idx + 1}"\r\n`));
     window.open(encodeURI(csvString.trim()));
     Swal.close();
-    barcodeInput.focus();
+    setTimeout(() => barcodeInput.focus(), 500)
 }
 
 function importCSV() {
@@ -249,7 +254,8 @@ function importCSV() {
                 updateSections();
                 updateTotalItems();
                 checkSectionControls();
-                barcodeInput.focus();
+                storeChanges();
+                setTimeout(() => barcodeInput.focus(), 500);
             }
             reader.readAsText(fileInput.files[0]);
         }
@@ -265,7 +271,7 @@ function deleteAll() {
     updateSections();
     updateTotalItems();
     Swal.close();
-    barcodeInput.focus();
+    setTimeout(() => barcodeInput.focus(), 500)
 }
 
 mainMenu.addEventListener('click', () => {
@@ -293,7 +299,10 @@ mainMenu.addEventListener('click', () => {
             document.querySelector('.main-menu .export').addEventListener('click', exportCSV);
             document.querySelector('.main-menu .import').addEventListener('click', importCSV);
             document.querySelector('.main-menu .delete').addEventListener('click', deleteAll);
-            document.querySelector('.main-menu .cancel').addEventListener('click', () => Swal.close());
+            document.querySelector('.main-menu .cancel').addEventListener('click', () => {
+                Swal.close();
+                setTimeout(() => barcodeInput.focus(), 500)
+            });
 
         }
       });
