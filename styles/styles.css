@@ -33,3 +33,8 @@
 .swal2-modal.main-menu .swal2-html-container {
     margin: 0;
 }
+
+.swal2-modal.grouped-section .swal2-html-container {
+    max-height: 70vh;
+    overflow-y: scroll;
+}

@@ -32,6 +32,14 @@ function storeChanges() {
     localStorage.setItem('sections', JSON.stringify(sections));
 }
 
+function storeFilename(filename) {
+    localStorage.setItem('filename', filename);
+}
+
+function getFilename() {
+    return localStorage.getItem('filename') || 'backup';
+}
+
 function getItemsInSection(section) {
     return section.reduce((acc, line) => acc + line.amount, 0);
 }
@@ -137,7 +145,7 @@ function addBarcodeToTable(barcodeData) {
     tr.appendChild(td1);
     tr.appendChild(td2);
     tr.appendChild(td3);
-    tableBody.appendChild(tr);
+    tableBody.insertBefore(tr, tableBody.firstChild);
 }
 
 
@@ -216,17 +224,35 @@ tableBody.addEventListener('click', (e) => {
 });
 
 function exportCSV() {
-    let csvString = 'Cantidad,Codigo,Seccion\r\n';
-    sections.forEach((section, section_idx) => 
-        section.forEach(item => 
-            csvString += `"${item.amount}","${item.barcode}","${section_idx + 1}"\r\n`));
-    var element = document.createElement('a');
-    element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvString));
-    const timestamp = new Date().toISOString().replaceAll(":", "_").split(".")[0];
-    element.setAttribute('download', "benasu_stock_" + timestamp + ".csv");
-    element.click();
     Swal.close();
-    setTimeout(() => barcodeInput.focus(), 500)
+    let filename = getFilename();
+    Swal.fire({
+        title: 'Exportar a archivo...',
+        html: `<div class="swal-save">
+            <input type="text" value="${filename}" class="form-control" id="filename"/>
+        </div>
+        `,
+        showCancelButton: true,
+        didOpen() {
+            const filenameInput = document.getElementById('filename')
+            filenameInput.addEventListener('change', () => {
+                filename = filenameInput.value;
+                storeFilename(filename);
+            });
+        }
+    }).then(result => {
+        if (!result.isConfirmed) return;
+        let csvString = 'Cantidad,Codigo,Seccion\r\n';
+        sections.forEach((section, section_idx) => 
+            section.forEach(item => 
+                csvString += `"${item.amount}","${item.barcode}","${section_idx + 1}"\r\n`));
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvString));
+        element.setAttribute('download', filename + ".csv");
+        element.click();
+        setTimeout(() => barcodeInput.focus(), 500)
+    })
+    
 }
 
 function importCSV() {
@@ -278,6 +304,19 @@ function deleteAll() {
     setTimeout(() => barcodeInput.focus(), 500)
 }
 
+function groupCurrentSection() {
+    const grouped = {}
+    sections[currentSection].forEach(item => {
+        grouped[item.barcode] = grouped[item.barcode] === undefined ? item.amount : (grouped[item.barcode] + item.amount);
+    });
+    sections[currentSection] = Object.keys(grouped).map((barcode, index) => {
+        return {index, barcode, amount: grouped[barcode]};
+    })
+    updateSections();
+    storeChanges();
+    Swal.close();
+}
+
 mainMenu.addEventListener('click', () => {
     Swal.fire({
         title: `Menú Principal`,
@@ -293,6 +332,7 @@ mainMenu.addEventListener('click', () => {
             </div>
             <div class="row mt-2">
                 <div class="col">
+                    <button class="btn btn-info group">Agrupar</button>
                     <button class="btn btn-light cancel">Cancelar</button>
                 </div>
             </div>
@@ -307,7 +347,7 @@ mainMenu.addEventListener('click', () => {
                 Swal.close();
                 setTimeout(() => barcodeInput.focus(), 500)
             });
-
+            document.querySelector('.main-menu .group').addEventListener('click', groupCurrentSection)
         }
       });
 })
