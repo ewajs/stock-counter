@@ -8,7 +8,7 @@
         "type": "image/png"
       }
     ],
-    "start_url": "stock-counter/index.html",
+    "start_url": "/stock-counter/",
     "background_color": "#ffffff",
     "display": "standalone",
     "scope": "/stock-counter/",
