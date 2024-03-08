@@ -10,7 +10,7 @@
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/stock-counter/js/sw.js', {scope: '/stock-counter/'}).then(function(registration) {
+          navigator.serviceWorker.register('/stock-counter/sw.js', {scope: '/stock-counter/'}).then(function(registration) {
             // Registration was successful
             console.log('ServiceWorker registration successful with scope: ', registration.scope);
           }, function(err) {
