@@ -3,7 +3,7 @@
     "name": "Benasu Stock",
     "icons": [
       {
-        "src": "stock-counter/icon/icon.png",
+        "src": "icon/icon.png",
         "sizes": "512x512",
         "type": "image/png"
       }
